@@ -42,8 +42,8 @@ public class Fragment2 extends Fragment {
                 Toast.makeText(getActivity(), "이미지 클릭" + position,
                         Toast.LENGTH_SHORT).show();
                 /*Intent 생성자는 두개의 변수를 취합니다*
-                *첫번째 매개변수 Context(Activity 클래스가 Context의 서브클래스이기 때문에 this가 사용됨)
-                *시스템이 Intent를 전달할 앱 구성요소의 Class(이 경우, 시작할 activity)
+                 *첫번째 매개변수 Context(Activity 클래스가 Context의 서브클래스이기 때문에 this가 사용됨)
+                 *시스템이 Intent를 전달할 앱 구성요소의 Class(이 경우, 시작할 activity)
                  */
                 Intent intent = new Intent(getActivity(), DisplayPhoto.class);
                 //첫번째 인자는 나중에 data를 꺼내기 위한 key 두번째 인자는 전달할 data입니다.

@@ -47,16 +47,20 @@ public class ImageAdapter extends BaseAdapter {
 
     // references to our images
     public static Integer[] mThumbIds = {
-            R.drawable.s0, R.drawable.s0,
-            R.drawable.s2, R.drawable.s3,
-            R.drawable.icon, R.drawable.s4,
-            R.drawable.face, R.drawable.s0,
-            R.drawable.s2, R.drawable.s3,
-            R.drawable.s4, R.drawable.icon,
-            R.drawable.face, R.drawable.icon,
-            R.drawable.s4, R.drawable.face,
-            R.drawable.s0, R.drawable.s2,
-            R.drawable.s3, R.drawable.s4,
-            R.drawable.icon, R.drawable.face
+            R.drawable.icon,R.drawable.s0,
+            R.drawable.s0,R.drawable.s1,
+            R.drawable.s2,R.drawable.s3,
+            R.drawable.s4,R.drawable.icon,
+            R.drawable.icon,R.drawable.icon,
+            R.drawable.icon,R.drawable.s1,
+            R.drawable.s0,R.drawable.s1,
+            R.drawable.s2,R.drawable.s3,
+            R.drawable.s4,R.drawable.icon,
+            R.drawable.icon,R.drawable.icon,
+            R.drawable.icon,R.drawable.s0,
+            R.drawable.s0,R.drawable.s1,
+            R.drawable.s2,R.drawable.s3,
+            R.drawable.s4,R.drawable.icon,
+            R.drawable.icon,R.drawable.icon
     };
 }

@@ -26,21 +26,21 @@
             android:layout_width="34dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Tab 1" />
+            android:text="@string/tab1" />
 
         <Button
             android:id="@+id/bt_tab2"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Tab 2" />
+            android:text="@string/tab2" />
 
         <Button
             android:id="@+id/bt_tab3"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Tab 3" />
+            android:text="@string/tab3" />
 
     </LinearLayout>
 
