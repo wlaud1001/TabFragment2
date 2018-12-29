@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Tab,Fragment</string>
+    <string name="title_activity_itemclickevent">itemclickevent</string>
+    <string name="textview">TextView</string>
+</resources>

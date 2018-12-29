@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".itemclickevent">
+
+    <TextView
+        android:id="@+id/tname"
+        android:layout_width="195dp"
+        android:layout_height="39dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="205dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tmobile"
+        android:layout_width="211dp"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="268dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="130dp"
+        android:text="확인"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/temail"
+        android:layout_width="195dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tmobile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="1dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="@color/colorAccent"
+        android:textSize="12sp" />
+
+</RelativeLayout>
