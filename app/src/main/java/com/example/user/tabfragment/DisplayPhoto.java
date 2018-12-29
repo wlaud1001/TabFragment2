@@ -45,7 +45,7 @@ public class DisplayPhoto extends AppCompatActivity {
         int id = ImageAdapter.mThumbIds[position]; //click한 image의 id
         ImageView imgview = findViewById(R.id.imageView3);
         //TextView photonum = findViewById(R.id);
-        setTitle("Photo"+position);
+        setTitle("Photo "+position);
         imgview.setImageDrawable(getResources().getDrawable(id));
 
 
