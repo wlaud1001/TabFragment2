@@ -1,62 +1,134 @@
 package com.example.user.tabfragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
-public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
+import java.util.ArrayList;
 
-    public ImageAdapter(Context c) {
+public class ImageAdapter extends BaseAdapter {
+
+    private Context mContext;
+    Activity activity;
+    private String imgData;
+    private String geoData;
+    private ArrayList<String> thumbsDataList;
+    private ArrayList<String> thumbsIDList;
+
+    public ImageAdapter(Context c){
         mContext = c;
+        activity= (Activity) mContext;
+        thumbsDataList = new ArrayList<String>();
+        thumbsIDList = new ArrayList<String>();
+        getThumbInfo(thumbsIDList, thumbsDataList);
+    }
+
+    public final void callImageViewer(int selectedIndex){
+        Intent i = new Intent(mContext, DisplayPhoto.class);
+        String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(selectedIndex));
+        i.putExtra("filename", imgPath);
+        activity.startActivityForResult(i, 1);
+    }
+
+    public boolean deleteSelected(int sIndex){
+        return true;
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return thumbsIDList.size();
     }
 
     public Object getItem(int position) {
-        return null;
+        return position;
     }
 
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        if (convertView == null) {
-            // if it's not recycled, initialize some attributes
+        if (convertView == null){
             imageView = new ImageView(mContext);
-            //view의 width와 heigth설정 drawable크기에 상관없이 각 이미지 크기 조정
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(250, 250));
-            //image가 center를 향해 잘리도록 선언
+            imageView.setLayoutParams(new GridView.LayoutParams(240, 240));
+            imageView.setAdjustViewBounds(false);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            //모든면에 대해 padding을 정의,
-            imageView.setPadding(8, 8, 8, 8);
-        } else {
+            imageView.setPadding(2, 2, 2, 2);
+        }else{
             imageView = (ImageView) convertView;
         }
+        BitmapFactory.Options bo = new BitmapFactory.Options();
+        bo.inSampleSize = 8;
+        Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
+        Bitmap resized = Bitmap.createScaledBitmap(bmp, 95, 95, true);
+        imageView.setImageBitmap(resized);
 
-        imageView.setImageResource(mThumbIds[position]);
         return imageView;
     }
 
-    // references to our images
-    public static Integer[] mThumbIds = {
-            R.drawable.s1,R.drawable.s4,
-            R.drawable.s5,R.drawable.s6,
-            R.drawable.s7,R.drawable.s0,
-            R.drawable.s9,R.drawable.s10,
-            R.drawable.s11,R.drawable.s0,
-            R.drawable.s8,R.drawable.s9,
-            R.drawable.s1,R.drawable.s4,
-            R.drawable.s5,R.drawable.s6,
-            R.drawable.s7,R.drawable.s0,
-            R.drawable.s9,R.drawable.s10,
-            R.drawable.s11
-    };
+    private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas){
+        String[] proj = {MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE};
+
+        Cursor imageCursor = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                proj, null, null, null);
+
+        if (imageCursor != null && imageCursor.moveToFirst()){
+            String title;
+            String thumbsID;
+            String thumbsImageID;
+            String thumbsData;
+            String data;
+            String imgSize;
+
+            int thumbsIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
+            int thumbsDataCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            int thumbsImageIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
+            int thumbsSizeCol = imageCursor.getColumnIndex(MediaStore.Images.Media.SIZE);
+            int num = 0;
+            do {
+                thumbsID = imageCursor.getString(thumbsIDCol);
+                thumbsData = imageCursor.getString(thumbsDataCol);
+                thumbsImageID = imageCursor.getString(thumbsImageIDCol);
+                imgSize = imageCursor.getString(thumbsSizeCol);
+                num++;
+                if (thumbsImageID != null){
+                    thumbsIDs.add(thumbsID);
+                    thumbsDatas.add(thumbsData);
+                }
+            }while (imageCursor.moveToNext());
+        }
+        imageCursor.close();
+        return;
+    }
+
+    private String getImageInfo(String ImageData, String Location, String thumbID){
+        String imageDataPath = null;
+        String[] proj = {MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE};
+        Cursor imageCursor = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                proj, "_ID='"+ thumbID +"'", null, null);
+
+        if (imageCursor != null && imageCursor.moveToFirst()){
+            if (imageCursor.getCount() > 0){
+                int imgData = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                imageDataPath = imageCursor.getString(imgData);
+            }
+        }
+        imageCursor.close();
+        return imageDataPath;
+    }
 }

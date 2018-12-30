@@ -1,8 +1,18 @@
 package com.example.user.tabfragment;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +25,7 @@ import android.widget.Toast;
  */
 public class Fragment2 extends Fragment {
 
+    private Context mContext;
 
     public Fragment2() {
         // Required empty public constructor
@@ -31,29 +42,86 @@ public class Fragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
-        GridView gridview = (GridView) view.findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(getActivity()));
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-
-                Toast.makeText(getActivity(), "이미지 클릭" + position,
-                        Toast.LENGTH_SHORT).show();
-                /*Intent 생성자는 두개의 변수를 취합니다*
-                 *첫번째 매개변수 Context(Activity 클래스가 Context의 서브클래스이기 때문에 this가 사용됨)
-                 *시스템이 Intent를 전달할 앱 구성요소의 Class(이 경우, 시작할 activity)
-                 */
-                Intent intent = new Intent(getActivity(), DisplayPhoto.class);
-                //첫번째 인자는 나중에 data를 꺼내기 위한 key 두번째 인자는 전달할 data입니다.
-                intent.putExtra("key", position);
-
-                //startActivity() 메서드는 Intent로 지정한 DisplayPhoto의 인스턴스를 시작합니다
-                startActivity(intent);
-            }
-        });
-
+        if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+            GridView gv = view.findViewById(R.id.ImgGridView);
+            Log.i("notice", "current: Fragment2 ");
+            final ImageAdapter ia = new ImageAdapter(getActivity());
+            gv.setAdapter(ia);
+            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    ia.callImageViewer(position);
+                }
+            });
+        }
         return view;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // do your stuff
+                } else {
+                    Toast.makeText(getActivity(), "GET_ACCOUNTS Denied",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions,
+                        grantResults);
+        }
     }
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
+            final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat
+                            .requestPermissions(
+                                    (Activity) context,
+                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
+    public void showDialog(final String msg, final Context context,
+                           final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle("Permission necessary");
+        alertBuilder.setMessage(msg + " permission is necessary");
+        alertBuilder.setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions((Activity) context,
+                                new String[] { permission },
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
+}

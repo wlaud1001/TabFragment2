@@ -1,8 +1,10 @@
 package com.example.user.tabfragment;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -33,9 +35,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bt_tab2.setOnClickListener(this);
         bt_tab3.setOnClickListener(this);
 
-
+        if(getIntent().getIntExtra("status",0)==312) {
+            Log.i("notice","back!");
+            callFragment(FRAGMENT2);
+        }
         // 임의로 액티비티 호출 시점에 어느 프레그먼트를 프레임레이아웃에 띄울 것인지를 정함
-        callFragment(FRAGMENT2);
+        else
+            callFragment(FRAGMENT3);
 
 
     }
@@ -75,9 +81,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case 2:
                 // '프래그먼트2' 호출
+                /*
+                Intent intent = new Intent(this, ImageList.class);
+                startActivity(intent);
+                */
+                ///*
                 Fragment2 fragment2 = new Fragment2();
                 transaction.replace(R.id.fragment_container, fragment2);
                 transaction.commit();
+                //*/
                 break;
 
             case 3:
