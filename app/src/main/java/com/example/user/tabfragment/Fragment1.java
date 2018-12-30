@@ -1,51 +1,52 @@
 package com.example.user.tabfragment;
 
-        import android.app.ProgressDialog;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.support.v4.app.Fragment;
-        import android.support.v7.app.AppCompatActivity;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.BaseAdapter;
-        import android.widget.ListAdapter;
-        import android.widget.ListView;
-        import android.widget.RelativeLayout;
-        import android.widget.SimpleAdapter;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
-
-        import java.util.ArrayList;
-        import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Fragment1 extends Fragment {
 
+    private  Button loadContacts;
     private ListView lv;
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
+    private TextView listContacts;
 
     private static String url = "https://api.androidhive.info/contacts/";
 
     ArrayList<HashMap<String, String>> contactList;
 
-    /*
-    ListView listView;
-    myAdapter adapter;
-    String[] fruits = {"A", "B", "C"};
-    */
+
 
 
     public Fragment1() {
@@ -63,7 +64,30 @@ public class Fragment1 extends Fragment {
 
         contactList = new ArrayList<>();
         lv = (ListView) view.findViewById(R.id.ListView);
-        new GetContacts().execute();
+
+
+
+
+        if (askForContactPermission(getActivity())) {
+            loadContacts();
+
+
+            loadContacts = (Button) view.findViewById(R.id.loadContacts);
+
+            loadContacts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    // do your stuff..
+
+                    loadContacts();
+                }
+                //loadContacts();
+            });
+
+
+        }
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,7 +102,7 @@ public class Fragment1 extends Fragment {
                 Intent intent = new Intent(getActivity().getApplicationContext(),itemclickevent.class);
 
                 intent.putExtra("name", data.get("name"));
-                intent.putExtra("email", data.get("email"));
+                //intent.putExtra("email", data.get("email"));
                 intent.putExtra("mobile", data.get("mobile"));
                 startActivity(intent);
 
@@ -87,153 +111,146 @@ public class Fragment1 extends Fragment {
 
         return view;
     }
-    private class GetContacts extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //show loading dialog
 
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("loading...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            HttpHandler sh = new HttpHandler();
+    private void loadContacts(){
 
-            String jsonStr = sh.makeServiceCall(url);
+        contactList.clear();
+        //StringBuilder builder = new StringBuilder();
 
-            Log.e(TAG, "Response from url: " + jsonStr);
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null,null,null,null);
 
-            if(jsonStr != null){
-                try{
-                    JSONObject jsonObject = new JSONObject(jsonStr);
+        if(cursor.getCount() > 0){
 
-                    //getting json array node
-                    JSONArray contacts = jsonObject.getJSONArray("contacts");
+            while(cursor.moveToNext())
+            {
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
 
-                    //looping through all contacts
-                    for(int i=0; i<contacts.length(); i++)
+                if (hasPhoneNumber > 0)
+                {
+                    Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{id}, null);
+                    while (cursor2.moveToNext())
                     {
-                        JSONObject c = contacts.getJSONObject(i);
-
-                        String id = c.getString("id");
-                        String name = c.getString("name");
-                        String email = c.getString("email");
-                        String address = c.getString("address");
-                        String gender = c.getString("gender");
-
-                        //Phone node is JSON object
-                        JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
-                        String home = phone.getString("home");
-                        String office = phone.getString("office");
+                        String phoneNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                         HashMap<String, String> contact = new HashMap<>();
-
-                        //adding each child node to hashmap
-                        contact.put("id",id);
+                        //contact.put("id",id);
                         contact.put("name",name);
-                        contact.put("email",email);
-                        contact.put("mobile",mobile);
+                        contact.put("mobile",phoneNumber);
 
                         //adding contact to contact list
                         contactList.add(contact);
+
+                       // builder.append("Contact : ").append(name).append(", Phone Number : ").append(phoneNumber).append("\n\n");
                     }
-                } catch (final JSONException e){
-                    Log.e(TAG, "JSON parsing error: " + e.getMessage());
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getActivity(),
-                                    "JSON parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    cursor2.close();
+
                 }
             }
-            else {
-                Log.e(TAG, "Couldn't get json from server.");
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(),
-                                "Couldn't get json from server.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            return null;
         }
+        cursor.close();
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            //Dismiss the dialog
-            if(pDialog.isShowing()){
-                pDialog.dismiss();
-            }
+        ListAdapter adapter = new SimpleAdapter(
+                getActivity(), contactList,
+                R.layout.list_item, new String[]{"name","mobile"},
+                new int[] {R.id.name, R.id.mobile});
 
-
-            //update inf json data to listview
-            ListAdapter adapter = new SimpleAdapter(
-                    getActivity(), contactList,
-                    R.layout.list_item, new String[]{"name", "email", "mobile"},
-                    new int[] {R.id.name, R.id.email, R.id.mobile});
-
-            lv.setAdapter(adapter);
+        lv.setAdapter(adapter);
 
 
 
-        }
+
+       // listContacts.setText(builder.toString());
+
+
+
     }
-/*
-    class myAdapter extends BaseAdapter{
-        @Override
-        public int getCount() {
-            return contactList.size();
-        }
 
-        @Override
-        public Object getItem(int position) {
-            return contactList.get(position);
-        }
+//////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////이 아래로는 permission
+    public static final int PERMISSION_REQUEST_CONTACT = 123;
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+    public boolean askForContactPermission(final Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context,
+                        Manifest.permission.READ_CONTACTS)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder( context);
+                    builder.setTitle("Contacts access needed");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage("please confirm Contacts access");//TODO put real question
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            requestPermissions(
+                                    new String[]
+                                            {Manifest.permission.READ_CONTACTS}
+                                    , PERMISSION_REQUEST_CONTACT);
+                        }
+                    });
+                    builder.show();
+                    // Show an expanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
 
-            final int pos = position;
-            final Context context = parent.getContext();
+                } else {
 
-            if(convertView == null)
+                    // No explanation needed, we can request the permission.
+
+                    ActivityCompat.requestPermissions( (Activity) context,
+                            new String[]{Manifest.permission.READ_CONTACTS},
+                            PERMISSION_REQUEST_CONTACT);
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+                return false;
+            }
+            else
             {
-                LayoutInflater inflater = (LayoutInflater)
-                        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_item, parent, false);
-
+                return true;
             }
-            TextView name = (TextView) convertView.findViewById(R.id.name) ;
-            TextView email = (TextView) convertView.findViewById(R.id.email) ;
-            TextView mobile = (TextView) convertView.findViewById(R.id.mobile) ;
-
-            contactList listviewitem = contactList.get(position);
-
-            name.setText(listviewitem.get(name));
-
-            return null;
         }
-
+        else{
+            return true;
+        }
     }
 
-*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CONTACT: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadContacts();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Toast.makeText(getActivity(), "GET_ACCOUNTS Denied",
+                            Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
 
 
