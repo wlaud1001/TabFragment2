@@ -36,8 +36,8 @@ public class DisplayPhoto extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         String rawImgname = getIntent().getStringExtra("filename");
-        int index = rawImgname.indexOf("Camera/");
-        rawImgname = rawImgname.substring(index+7);
+        int index = rawImgname.lastIndexOf("/");
+        rawImgname = rawImgname.substring(index+1);
         Log.i("imgname",rawImgname);
         setTitle(rawImgname); //상단바 title변경
 
