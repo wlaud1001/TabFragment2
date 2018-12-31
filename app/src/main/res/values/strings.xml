@@ -3,4 +3,5 @@
     <string name="back">back</string>
     <string name="title_activity_display_photo">photo#</string>
     <string name="title_activity_itemclickevent">click</string>
+    <string name="title_activity_base_num">BaseNum</string>
 </resources>
