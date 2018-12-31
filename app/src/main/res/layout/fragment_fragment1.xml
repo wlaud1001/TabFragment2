@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="peace.tabbutton.Fragment1">
+    tools:context=".Fragment1">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -10,8 +10,10 @@
     <ListView
         android:id="@+id/ListView"
         android:layout_width="match_parent"
-        android:layout_height="391dp"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft= "true"
+        android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp" />
@@ -20,9 +22,12 @@
         android:id="@+id/loadContacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="9dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="456dp"
         android:text="새로고침" />
 
 </RelativeLayout>
