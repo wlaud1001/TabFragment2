@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class DisplayPhoto extends AppCompatActivity implements View.OnClickListener {
+public class DisplayPhoto extends AppCompatActivity {
 
     private Context mContext = null;
     private final int imgWidth = 500;
@@ -48,19 +48,11 @@ public class DisplayPhoto extends AppCompatActivity implements View.OnClickListe
 
         /** 리스트로 가기 버튼 */
         Button btn = (Button)findViewById(R.id.btn_back);
-        btn.setOnClickListener(this);
-    }
-    /* (non-Javadoc)
-     * @see android.view.View.OnClickListener#onClick(android.view.View)
-     */
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.btn_back:
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.putExtra("status",312);
-                startActivity(intent);
-                break;
-        }
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            { onBackPressed(); }
+        });
     }
 
 }
