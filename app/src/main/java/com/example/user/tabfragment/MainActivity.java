@@ -1,5 +1,6 @@
 package com.example.user.tabfragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         //어댑터를 생성한다. 섹션마다 프래그먼트를 생성하여 리턴해준다.
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
@@ -59,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
     }
+
 
 
     @Override //액션바의 탭 선택시 호출됨

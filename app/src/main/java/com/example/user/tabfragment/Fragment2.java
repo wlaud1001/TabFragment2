@@ -13,6 +13,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,11 +27,24 @@ public class Fragment2 extends Fragment {
     public Fragment2(){
     }
 
+    LayoutInflater inf;
+    ViewGroup cont;
+    Bundle saved;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
         Log.i("fragment2","onCreateView");
+
+        setHasOptionsMenu(true);
+
+
+        inf = inflater;
+        cont = container;
+        saved = savedInstanceState;
+
         if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+
             GridView gv = view.findViewById(R.id.ImgGridView);
             final ImageAdapter ia = new ImageAdapter(getActivity());
             gv.setAdapter(ia);
@@ -37,9 +53,52 @@ public class Fragment2 extends Fragment {
                     ia.callImageViewer(position);
                 }
             });
+
         }
+
+
+
         return view;
     }
+
+    /**추가*/
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        /*
+        View view = inf.inflate(R.layout.fragment_fragment2, cont, false);
+        GridView gv = view.findViewById(R.id.ImgGridView);
+        final ImageAdapter ia = new ImageAdapter(getActivity());
+        gv.setAdapter(ia);
+        */
+
+        //return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                onCreateView(inf,cont,saved);
+
+
+                //디버깅용 삭제
+                Toast.makeText(getActivity().getApplicationContext(), "!!!!!", Toast.LENGTH_LONG).show();
+
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                //Toast.makeText(getApplicationContext(), "나머지 버튼 클릭됨", Toast.LENGTH_LONG).show();
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 
     /*Permission*/
     @Override
