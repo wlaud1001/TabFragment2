@@ -11,6 +11,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -24,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +106,19 @@ public class Fragment1 extends Fragment {
                 HashMap<String,String> data = contactList.get(position);
 //값 전달
                 Intent intent = new Intent(getActivity().getApplicationContext(),itemclickevent.class);
+
+                Bitmap bitmap;
+                if(data.get("photo") != "Nophoto")
+                    bitmap = queryContactImage(Integer.parseInt(data.get("photo")));
+                else
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.kakao);
+
+
+                bitmap = resizingBitmap(bitmap);
+
+                bitmap = getRoundedBitmap(bitmap, 60);
+
+                intent.putExtra("photo", bitmap);
                 intent.putExtra("name", data.get("name"));
                 intent.putExtra("email", data.get("email"));
                 intent.putExtra("mobile", data.get("mobile"));
@@ -106,14 +127,39 @@ public class Fragment1 extends Fragment {
             }
         });
 
+
         return view;
     }
 
 
 //연락처 불러오기
-    private void loadContacts(){
+    private void loadContacts() {
+
+        contactList.clear();
+
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null,null,null,null);
+        if(cursor.getCount() > 0) {
+
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+                queryContactInfo(Integer.parseInt(id));
+
+            }
 
 
+        }
+
+        ListAdapter adapter = new ExtendedSimpleAdapter(
+                getActivity(), contactList,
+                R.layout.list_item, new String[]{"name","email","mobile","photo"},
+                new int[] {R.id.name,R.id.email, R.id.mobile,R.id.photo});
+
+        lv.setAdapter(adapter);
+
+
+/*
         contactList.clear();
         //StringBuilder builder = new StringBuilder();
 
@@ -156,10 +202,7 @@ public class Fragment1 extends Fragment {
                         while (emails.moveToNext())
                         {
                             email = emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-
                         }
-
-
 
                         emails.close();
 
@@ -196,9 +239,170 @@ public class Fragment1 extends Fragment {
 
 
 
+*/
+
+
+    }
+    private void queryContactInfo(int rawContactId) {
+
+
+
+        ContentResolver contentResolver = getActivity().getContentResolver();
+
+        Cursor c = contentResolver.query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                new String[] {
+                        ContactsContract.CommonDataKinds.Phone.NUMBER,
+                        ContactsContract.CommonDataKinds.Phone.TYPE,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone.PHOTO_ID
+
+                }, ContactsContract.Data.RAW_CONTACT_ID + "=?", new String[] { Integer.toString(rawContactId) }, null);
+
+
+
+        String name = "";
+        String number = "Phone Number";
+        String email ="Email";
+
+        //int photoId = 555;
+        String photo ="Nophoto";
+
+        HashMap<String, String> contact = new HashMap<>();
+
+
+        if (c != null) {
+            if (c.moveToFirst()) {
+
+                name = c.getString(2);
+                number = c.getString(0);
+                //int type = c.getInt(1);
+
+
+                int photoId = c.getInt(3);
+                //Bitmap bitmap = queryContactImage(photoId);
+
+                if(photoId != 0)
+                    photo = Integer.toString(photoId);
+
+
+                Cursor emails = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                        new String[]{Integer.toString(rawContactId)}, null);
+
+                while (emails.moveToNext())
+                {
+                    email = emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                }
+
+                emails.close();
+
+
+
+
+
+
+                //showSelectedNumber(type, number, name, bitmap);
+            }
+            c.close();
+        }
+
+        contact.put("name",name);
+        contact.put("mobile",number);
+        contact.put("email",email);
+        contact.put("photo",photo);
+
+        contactList.add(contact);
+
+
+
+
+
+
     }
 
 
+    private Bitmap queryContactImage(int imageDataRow) {
+
+        ContentResolver contentResolver = getActivity().getContentResolver();
+
+        Cursor c = contentResolver.query(ContactsContract.Data.CONTENT_URI, new String[] {
+                ContactsContract.CommonDataKinds.Photo.PHOTO
+        }, ContactsContract.Data._ID + "=?", new String[] {
+                Integer.toString(imageDataRow)
+        }, null);
+        byte[] imageBytes = null;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                imageBytes = c.getBlob(0);
+            }
+            c.close();
+        }
+
+        if (imageBytes != null) {
+            return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        } else {
+            return null;
+        }
+    }
+
+    public static Bitmap getRoundedBitmap(Bitmap bitmap, int cornerRadius) {
+
+        if (bitmap == null) {
+            return null;
+        }
+        if (cornerRadius < 0) {
+            cornerRadius = 0;
+        }
+        // Create plain bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(canvasBitmap);
+        canvas.drawARGB(0,0,0,0);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+
+        Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        RectF rectF = new RectF(rect);
+
+        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint);
+
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return canvasBitmap;
+    }
+
+
+    public Bitmap resizingBitmap(Bitmap oBitmap) {
+        if (oBitmap == null)
+            return null;
+        float width = oBitmap.getWidth();
+        float height = oBitmap.getHeight();
+        float resizing_size = 120;
+        Bitmap rBitmap = null;
+        if (width > resizing_size) {
+            float mWidth = (float) (width / 100);
+            float fScale = (float) (resizing_size / mWidth);
+            width *= (fScale / 100);
+            height *= (fScale / 100);
+
+        } else if (height > resizing_size) {
+            float mHeight = (float) (height / 100);
+            float fScale = (float) (resizing_size / mHeight);
+            width *= (fScale / 100);
+            height *= (fScale / 100);
+        }
+
+        //Log.d("rBitmap : " + width + ", " + height);
+        rBitmap = Bitmap.createScaledBitmap(oBitmap, (int) width, (int) height, true);
+        return rBitmap;
+    }
 
 
 
@@ -229,6 +433,7 @@ public class Fragment1 extends Fragment {
                         }
                     });
                     builder.show();
+
                     // Show an expanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
@@ -285,4 +490,9 @@ public class Fragment1 extends Fragment {
 
 
 
+
+
+
+
 }
+
