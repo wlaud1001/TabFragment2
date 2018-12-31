@@ -12,7 +12,7 @@
         android:layout_height="39dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="205dp"
+        android:layout_marginTop="246dp"
         android:gravity="center"
         android:text="TextView"
         android:textColor="@color/colorPrimaryDark"
@@ -20,11 +20,13 @@
 
     <TextView
         android:id="@+id/tmobile"
-        android:layout_width="211dp"
-        android:layout_height="34dp"
+        android:layout_width="206dp"
+        android:layout_height="47dp"
+        android:layout_below="@+id/tname"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="286dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="216dp"
         android:gravity="center"
         android:text="TextView"
         android:textSize="15sp"
@@ -39,5 +41,17 @@
         android:layout_marginBottom="130dp"
         android:text="확인"
         android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/temail"
+        android:layout_width="217dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="289dp"
+        android:gravity="center"
+        android:text="Email"
+        android:textSize="12sp"
+        android:textColor="@color/colorAccent"/>
 
 </RelativeLayout>

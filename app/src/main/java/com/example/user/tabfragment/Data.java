@@ -3,7 +3,7 @@ package com.example.user.tabfragment;
 public class Data {
 
     private String name;
-    // String email;
+    private String email;
     private String mobile;
 
     public Data()
@@ -15,7 +15,7 @@ public class Data {
     {
         super();
         this.name = name;
-        //this.email = email;
+        this.email = email;
         this.mobile = mobile;
 
     }
@@ -28,7 +28,7 @@ public class Data {
         this.name = name;
     }
 
-    /*
+
     public String getEmail() {
         return email;
     }
@@ -36,7 +36,7 @@ public class Data {
     public void setEmail(String email) {
         this.email = email;
     }
-*/
+
 
     public String getMobile() {
         return mobile;

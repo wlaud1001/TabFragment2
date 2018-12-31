@@ -68,12 +68,12 @@ public class Fragment1 extends Fragment {
 
 
 
+        loadContacts = (Button) view.findViewById(R.id.loadContacts);
+
+        //승인나면
         if (askForContactPermission(getActivity())) {
+
             loadContacts();
-
-
-            loadContacts = (Button) view.findViewById(R.id.loadContacts);
-
             loadContacts.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +89,6 @@ public class Fragment1 extends Fragment {
 
         }
 
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -97,12 +96,10 @@ public class Fragment1 extends Fragment {
                 //Data data = contactList.get(position);
 
                 HashMap<String,String> data = contactList.get(position);
-
-
+//값 전달
                 Intent intent = new Intent(getActivity().getApplicationContext(),itemclickevent.class);
-
                 intent.putExtra("name", data.get("name"));
-                //intent.putExtra("email", data.get("email"));
+                intent.putExtra("email", data.get("email"));
                 intent.putExtra("mobile", data.get("mobile"));
                 startActivity(intent);
 
@@ -113,8 +110,9 @@ public class Fragment1 extends Fragment {
     }
 
 
-
+//연락처 불러오기
     private void loadContacts(){
+
 
         contactList.clear();
         //StringBuilder builder = new StringBuilder();
@@ -122,44 +120,72 @@ public class Fragment1 extends Fragment {
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null,null,null,null);
 
+
+
         if(cursor.getCount() > 0){
 
             while(cursor.moveToNext())
             {
+
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+                String email = "Email";
+                String phoneNumber = "Phone Number";
+
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+
+                HashMap<String, String> contact = new HashMap<>();
 
                 if (hasPhoneNumber > 0)
                 {
-                    Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+
+                    Cursor phonenb = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                             new String[]{id}, null);
-                    while (cursor2.moveToNext())
+
+
+                    while (phonenb.moveToNext())
                     {
-                        String phoneNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        phoneNumber = phonenb.getString(phonenb.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                        HashMap<String, String> contact = new HashMap<>();
-                        //contact.put("id",id);
-                        contact.put("name",name);
-                        contact.put("mobile",phoneNumber);
+                        Cursor emails = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                new String[]{id}, null);
 
-                        //adding contact to contact list
-                        contactList.add(contact);
+                        while (emails.moveToNext())
+                        {
+                            email = emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+
+                        }
+
+
+
+                        emails.close();
 
                        // builder.append("Contact : ").append(name).append(", Phone Number : ").append(phoneNumber).append("\n\n");
                     }
-                    cursor2.close();
-
+                    phonenb.close();
                 }
+
+
+                //adding contact to contact list
+
+                contact.put("name",name);
+                contact.put("mobile",phoneNumber);
+                contact.put("email",email);
+                contactList.add(contact);
+
+
+
             }
         }
         cursor.close();
 
         ListAdapter adapter = new SimpleAdapter(
                 getActivity(), contactList,
-                R.layout.list_item, new String[]{"name","mobile"},
-                new int[] {R.id.name, R.id.mobile});
+                R.layout.list_item, new String[]{"name","email","mobile"},
+                new int[] {R.id.name,R.id.email, R.id.mobile});
 
         lv.setAdapter(adapter);
 
@@ -171,6 +197,11 @@ public class Fragment1 extends Fragment {
 
 
     }
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////이 아래로는 permission
