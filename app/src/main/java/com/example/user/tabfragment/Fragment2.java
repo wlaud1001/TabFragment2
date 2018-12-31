@@ -25,15 +25,15 @@ import android.widget.Toast;
  */
 public class Fragment2 extends Fragment {
 
-    private Context mContext;
-
     public Fragment2() {
         // Required empty public constructor
+        Log.i("fragment2", "empty");
     }
 
     @Override //fragment가 생성될때 호출되는 부분
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("fragment2", "onCreate");
 
     }
 
@@ -42,11 +42,11 @@ public class Fragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        Log.i("fragment2","onCreateView");
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
         if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
             GridView gv = view.findViewById(R.id.ImgGridView);
-            Log.i("notice", "current: Fragment2 ");
+            Log.i("fragment2", "permission pass");
             final ImageAdapter ia = new ImageAdapter(getActivity());
             gv.setAdapter(ia);
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,8 +80,12 @@ public class Fragment2 extends Fragment {
 
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(
             final Context context) {
+        Log.i("fragment2","checkPermissionREAD_EXTERNAL_STORAGE");
         int currentAPIVersion = Build.VERSION.SDK_INT;
+        Log.i("fragment2","currentAPIVersion : "+currentAPIVersion + " android ... : "+android.os.Build.VERSION_CODES.M);
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            Log.i("fragment2","firstOne : "+ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) + " secondOne : "+PackageManager.PERMISSION_GRANTED);
             if (ContextCompat.checkSelfPermission(context,
                     Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
