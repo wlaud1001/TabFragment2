@@ -27,10 +27,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,6 +72,9 @@ public class Fragment1 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+//////////////
+        setHasOptionsMenu(true);
+
         View view = inflater.inflate(R.layout.fragment_fragment1, container, false);
 
         contactList = new ArrayList<>();
@@ -75,26 +82,13 @@ public class Fragment1 extends Fragment {
 
 
 
+        loadContacts = (Button) view.findViewById(R.id.refresh);
 
-        loadContacts = (Button) view.findViewById(R.id.loadContacts);
+
 
         //승인나면
         if (askForContactPermission(getActivity())) {
-
             loadContacts();
-            loadContacts.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    // do your stuff..
-
-                    loadContacts();
-                }
-                //loadContacts();
-            });
-
-
         }
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,6 +124,35 @@ public class Fragment1 extends Fragment {
 
         return view;
     }
+
+
+    /**추가*/
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                // User chose the "Settings" item, show the app settings UI...
+                loadContacts();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                //Toast.makeText(getApplicationContext(), "나머지 버튼 클릭됨", Toast.LENGTH_LONG).show();
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+
+
 
 
     //연락처 불러오기
