@@ -50,11 +50,7 @@ public class Fragment1 extends Fragment {
 
     private  Button loadContacts;
     private ListView lv;
-    private String TAG = MainActivity.class.getSimpleName();
-    private ProgressDialog pDialog;
-    private TextView listContacts;
 
-    private static String url = "https://api.androidhive.info/contacts/";
 
     ArrayList<HashMap<String, String>> contactList;
 
@@ -79,10 +75,6 @@ public class Fragment1 extends Fragment {
 
         contactList = new ArrayList<>();
         lv = (ListView) view.findViewById(R.id.ListView);
-
-
-
-        loadContacts = (Button) view.findViewById(R.id.refresh);
 
 
 
@@ -181,56 +173,6 @@ public class Fragment1 extends Fragment {
 
         lv.setAdapter(adapter);
 
-
-/*
-        contactList.clear();
-        //StringBuilder builder = new StringBuilder();
-        ContentResolver contentResolver = getActivity().getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null,null,null,null);
-        if(cursor.getCount() > 0){
-            while(cursor.moveToNext())
-            {
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                String email = "Email";
-                String phoneNumber = "Phone Number";
-                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-                HashMap<String, String> contact = new HashMap<>();
-                if (hasPhoneNumber > 0)
-                {
-                    Cursor phonenb = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            new String[]{id}, null);
-                    while (phonenb.moveToNext())
-                    {
-                        phoneNumber = phonenb.getString(phonenb.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        Cursor emails = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                new String[]{id}, null);
-                        while (emails.moveToNext())
-                        {
-                            email = emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-                        }
-                        emails.close();
-                       // builder.append("Contact : ").append(name).append(", Phone Number : ").append(phoneNumber).append("\n\n");
-                    }
-                    phonenb.close();
-                }
-                //adding contact to contact list
-                contact.put("name",name);
-                contact.put("mobile",phoneNumber);
-                contact.put("email",email);
-                contactList.add(contact);
-            }
-        }
-        cursor.close();
-        ListAdapter adapter = new SimpleAdapter(
-                getActivity(), contactList,
-                R.layout.list_item, new String[]{"name","email","mobile"},
-                new int[] {R.id.name,R.id.email, R.id.mobile});
-        lv.setAdapter(adapter);
-       // listContacts.setText(builder.toString());
-*/
 
 
     }

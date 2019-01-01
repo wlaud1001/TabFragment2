@@ -21,12 +21,15 @@ import java.util.Set;
  * A simple {@link Fragment} subclass.
  */
 public class Fragment3 extends Fragment {
+
+    /*
     EditText edittext;
     String input;
     ArrayList<Integer> answer = new ArrayList<Integer>();
     int leng;
     int strike =0;
     int ball =0;
+
 
     public Fragment3() {
         // Required empty public constructor
@@ -39,11 +42,33 @@ public class Fragment3 extends Fragment {
         leng = answer.size();
     }
 
+*/
+   private Button gamestart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_fragment3, container, false);
+
+        gamestart = (Button) view.findViewById(R.id.gamestart);
+
+
+        gamestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity().getApplicationContext(),numberbaseball.class);
+                startActivity(intent);
+
+
+            }
+        });
+
+
+        /*
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.activity_base_num, container, false);
         edittext = (EditText) view.findViewById(R.id.editText2);
         Button button = (Button) view.findViewById(R.id.bu1);
@@ -56,19 +81,25 @@ public class Fragment3 extends Fragment {
                 int res = trialResult();
                 int str = res/10;
                 int bal = res%10;
-                /*result of trial*/
+                //result of trial
                 if(str==4){
-                    /*TODO: SUCCESS Game종료*/
+                    //TODO: SUCCESS Game종료
                     Log.i("basenum","SUCCESS");
                 } else if(str+bal==0){
                     Log.i("basenum","OUT");
                 }
-                /*TODO: else->strike값과 ball값 띄우기*/
+                //TODO: else->strike값과 ball값 띄우기
                 Log.i("basenum","strike: "+str+" ball: "+bal);
             }
         });
+
+*/
         return view;
+
+
     }
+
+    /*
     public void makeAnswer() {
         Set<Integer> set = new HashSet<Integer>();
         Random random = new Random();
@@ -95,4 +126,5 @@ public class Fragment3 extends Fragment {
         }
         return strike*10+ball;
     }
+    */
 }
