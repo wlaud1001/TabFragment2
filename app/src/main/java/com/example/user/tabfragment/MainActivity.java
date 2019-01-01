@@ -147,36 +147,4 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         }
     }
 
-    private void callFragment(int frament_no){
-
-        // 프래그먼트 사용을 위해
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        switch (frament_no){
-            case 1:
-                // '프래그먼트1' 호출
-                Fragment1 fragment1 = new Fragment1();
-                transaction.replace(R.id.fragment_container, fragment1);
-                transaction.commit();
-                break;
-
-            case 2:
-                // '프래그먼트2' 호출
-                Fragment2 fragment2 = new Fragment2();
-                transaction.replace(R.id.fragment_container, fragment2);
-                transaction.commit();
-                break;
-
-            case 3:
-                // '프래그먼트2' 호출
-                Fragment3 fragment3 = new Fragment3();
-                transaction.replace(R.id.fragment_container, fragment3);
-                transaction.commit();
-                break;
-        }
-
-    }
-
-
-
 }

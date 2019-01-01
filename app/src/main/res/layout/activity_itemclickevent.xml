@@ -4,33 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     tools:context=".itemclickevent">
-
-    <TextView
-        android:id="@+id/tname"
-        android:layout_width="195dp"
-        android:layout_height="39dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="246dp"
-        android:gravity="center"
-        android:text="TextView"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tmobile"
-        android:layout_width="206dp"
-        android:layout_height="47dp"
-        android:layout_below="@+id/tname"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:layout_marginBottom="216dp"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="15sp"
-        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button"
@@ -38,21 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="130dp"
+        android:layout_marginBottom="118dp"
         android:text="확인"
         android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/temail"
-        android:layout_width="217dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="289dp"
-        android:gravity="center"
-        android:text="Email"
-        android:textSize="12sp"
-        android:textColor="@color/colorAccent"/>
 
     <ImageView
         android:id="@+id/tphoto"
@@ -60,7 +23,55 @@
         android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp"
+        android:layout_marginTop="120dp"
+        android:background="#FFF"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="123dp"
+        android:layout_marginTop="277dp"
+
+        android:orientation="vertical"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/tname"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_alignStart="@+id/temail"
+            android:layout_alignParentTop="true"
+
+            android:layout_weight="1"
+            android:background="#FFF"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/temail"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_weight="1"
+            android:background="#FFF"
+            android:gravity="center"
+            android:text="Email"
+            android:textColor="#009999"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tmobile"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_below="@+id/tname"
+            android:layout_weight="1"
+            android:background="#FFF"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -3,9 +3,9 @@ package com.example.user.tabfragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,8 +26,10 @@ public class numberbaseball extends AppCompatActivity {
     String input;
     ArrayList<Integer> answer = new ArrayList<Integer>();
     int len; //intent로 사용자가 입력한 숫자의 길이
-
+    String userAnswer;
     ArrayList<HashMap<String, String>> infoList;
+    int mode;
+    ArrayList<HashMap<String, String>> infoList1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,13 @@ public class numberbaseball extends AppCompatActivity {
         setContentView(R.layout.activity_base_num);
 
         len = getIntent().getIntExtra("num#",3); //checkbox에서 입력한 숫자길이
+        if(getIntent().getIntExtra("user",0)==1){
+            mode=2;
+            userAnswer = getIntent().getStringExtra("userAnswer");
+        }else mode=1;
+
         infoList = new ArrayList<>();
+        infoList1 = new ArrayList<>();
     }
 
 
@@ -43,7 +51,7 @@ public class numberbaseball extends AppCompatActivity {
     protected void onStart() {
         answer.clear();
         //정답 생성
-        makeAnswer(len);
+        makeAnswer();
         String ans = "";
         for (int i = 0; i < answer.size(); i++) {
             ans += answer.get(i);
@@ -103,8 +111,13 @@ public class numberbaseball extends AppCompatActivity {
 
                     ListView pastlist = findViewById(R.id.pastinfo);
 
-                    Collections.reverse(infoList);
-                    ListAdapter adapter = new ExtendedSimpleAdapter(getApplicationContext(),infoList ,
+                    infoList1.clear();
+                    for(int i=infoList.size()-1; i>=0; i--)
+                    {
+                        infoList1.add(infoList.get(i));
+                    }
+
+                    ListAdapter adapter = new ExtendedSimpleAdapter(getApplicationContext(),infoList1 ,
                             R.layout.infolist, new String[]{"input", "strike", "ball", "out"},
                             new int[]{R.id.tnumber, R.id.tstrike, R.id.tball, R.id.tout});
                     pastlist.setAdapter(adapter);
@@ -133,25 +146,34 @@ public class numberbaseball extends AppCompatActivity {
             public void onClick(View v) {
                 infoList.clear();
                 onBackPressed();
+
             }
         });
         super.onResume();
     }
 
     /* 임의로 4개의 숫자배열 생성 */
-    public void makeAnswer(int len) {
-        Set<Integer> set = new HashSet<Integer>();
-        set.clear();
-        Random random = new Random();
-        int Currentsetsize = 0;
-        while (set.size() < len) {
-            int c = random.nextInt(10);
-            set.add(c);
-            if (Currentsetsize != set.size()) {
-                answer.add(c);
-                Currentsetsize++;
+    public void makeAnswer() {
+        if(mode==1){
+            Set<Integer> set = new HashSet<Integer>();
+            set.clear();
+            Random random = new Random();
+            int Currentsetsize = 0;
+            while (set.size() < len) {
+                int c = random.nextInt(10);
+                set.add(c);
+                if (Currentsetsize != set.size()) {
+                    answer.add(c);
+                    Currentsetsize++;
+                }
+            }
+            return;
+        }else{
+            for(int i =0; i<len; i++){
+                answer.add(userAnswer.charAt(i)-48);
             }
         }
+
     }
 
     public int trialResult() {
@@ -168,6 +190,7 @@ public class numberbaseball extends AppCompatActivity {
         return strike * 10 + ball;
     }
 
+
     /**SUCCESS*/
     public void showalert(String string) {
         AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
@@ -180,6 +203,7 @@ public class numberbaseball extends AppCompatActivity {
                 /**restart*/
                 infoList.clear();
                 onBackPressed();
+
             }
         });
         // 다이얼로그 생성

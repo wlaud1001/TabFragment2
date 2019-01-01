@@ -34,15 +34,7 @@
             android:name=".numberbaseball"
             android:label="@string/title_activity_numberbaseball"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".player1"
-            android:label="@string/title_activity_numberbaseball"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".player2"
-            android:label="@string/title_activity_numberbaseball"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DoubleMode"></activity>
+        <activity android:name=".userInput"></activity>
     </application>
 
 </manifest>

@@ -27,7 +27,7 @@ public class Fragment3 extends Fragment {
    private Button gamestart;
    ArrayList<CheckBox> mCheckBoxes = new ArrayList<CheckBox>();
    ArrayList<CheckBox> gamemode = new ArrayList<CheckBox>();
-   int selected_position;
+   int selected_position=0;
    CheckBox checkBox1;
    CheckBox checkBox2;
    CheckBox checkBox3;
@@ -63,18 +63,19 @@ public class Fragment3 extends Fragment {
                 Log.i("checkbox2",""+checkBox2.isChecked());
                 Log.i("checkbox3",""+checkBox3.isChecked());
                 Log.i("selected_position",""+selected_position);
-                if(single.isChecked()){
-                    Intent intent1 = new Intent(getActivity().getApplicationContext(),numberbaseball.class);
-                    intent1.putExtra("num#",selected_position);
-                    if(selected_position>0)
+                if(selected_position>0){
+                    if(single.isChecked()){
+                        Intent intent1 = new Intent(getActivity().getApplicationContext(),numberbaseball.class);
+                        intent1.putExtra("num#",selected_position);
                         startActivity(intent1);
-                    else
-                        Toast.makeText(getActivity(),"Cannot start TT", Toast.LENGTH_LONG).show();
-                }else{
-                    Intent intent = new Intent(getActivity().getApplicationContext(),DoubleMode.class);
-                    intent.putExtra("first",true);
-                    startActivity(intent);
+                    }else if(multi.isChecked()){
+                        Intent intent = new Intent(getActivity().getApplicationContext(),userInput.class);
+                        intent.putExtra("num#",selected_position);
+                        startActivity(intent);
+                    }else
+                        Toast.makeText(getActivity(),"You should select game mode.", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
         return view;

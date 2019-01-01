@@ -1,8 +1,9 @@
 <resources>
-    <string name="appname">TAB 3</string>
+    <string name="appname">NumBa</string>
     <string name="back">back</string>
     <string name="title_activity_display_photo">photo#</string>
     <string name="title_activity_itemclickevent">click</string>
     <string name="title_activity_base_num">BaseNum</string>
     <string name="title_activity_numberbaseball">numberbaseball</string>
+    <string name="title_activity_user_input">userInput</string>
 </resources>

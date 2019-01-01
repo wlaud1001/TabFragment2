@@ -3,15 +3,11 @@ package com.example.user.tabfragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 public class Fragment2 extends Fragment {
@@ -69,10 +63,6 @@ public class Fragment2 extends Fragment {
     {
         switch (item.getItemId()) {
             case R.id.refresh:
-                /*Intent intent = new Intent(getActivity(),MainActivity.class);
-                intent.putExtra("reset",true);
-                startActivity(intent);*/
-                Toast.makeText(getActivity().getApplicationContext(), "pushed reset button", Toast.LENGTH_LONG).show();
                 loadImage(v,getActivity());
                 //onCreateView(inf,cont,saved);
                 //디버깅용 삭제
@@ -80,9 +70,6 @@ public class Fragment2 extends Fragment {
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                //Toast.makeText(getApplicationContext(), "나머지 버튼 클릭됨", Toast.LENGTH_LONG).show();
                 return super.onOptionsItemSelected(item);
         }
     }

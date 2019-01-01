@@ -69,10 +69,35 @@ public class ImageAdapter extends BaseAdapter {
         BitmapFactory.Options bo = new BitmapFactory.Options();
         bo.inSampleSize = 8;
         Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
-        Bitmap resized = Bitmap.createScaledBitmap(bmp, 95, 95, true);
+        Bitmap resized = resizingBitmap(bmp);
         imageView.setImageBitmap(resized);
 
         return imageView;
+    }
+
+    public Bitmap resizingBitmap(Bitmap oBitmap) {
+        if (oBitmap == null)
+            return null;
+        float width = oBitmap.getWidth();
+        float height = oBitmap.getHeight();
+        float resizing_size = 120;
+        Bitmap rBitmap = null;
+        if (width > resizing_size) {
+            float mWidth = (float) (width / 100);
+            float fScale = (float) (resizing_size / mWidth);
+            width *= (fScale / 100);
+            height *= (fScale / 100);
+
+        } else if (height > resizing_size) {
+            float mHeight = (float) (height / 100);
+            float fScale = (float) (resizing_size / mHeight);
+            width *= (fScale / 100);
+            height *= (fScale / 100);
+        }
+
+        //Log.d("rBitmap : " + width + ", " + height);
+        rBitmap = Bitmap.createScaledBitmap(oBitmap, (int) width, (int) height, true);
+        return rBitmap;
     }
 
     private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas){
