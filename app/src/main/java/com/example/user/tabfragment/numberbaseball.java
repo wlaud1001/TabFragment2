@@ -1,39 +1,29 @@
 package com.example.user.tabfragment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 public class numberbaseball extends AppCompatActivity {
-
-
     EditText edittext;
     String input;
     ArrayList<Integer> answer = new ArrayList<Integer>();
-    //int leng; //answersize 받는 애
-    int strike = 0;
-    int ball = 0;
-    int len; //answersize 주는 애
+    int len; //intent로 사용자가 입력한 숫자의 길이
 
     ArrayList<HashMap<String, String>> infoList;
 
@@ -41,17 +31,13 @@ public class numberbaseball extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_num);
-
+        len = getIntent().getIntExtra("num#",3); //checkbox에서 입력한 숫자길이
         infoList = new ArrayList<>();
-
     }
 
 
     @Override
     protected void onStart() {
-
-        len = 4;
-
         answer.clear();
         //정답 생성
         makeAnswer(len);
@@ -60,19 +46,13 @@ public class numberbaseball extends AppCompatActivity {
             ans += answer.get(i);
         }
         Log.i("ANSWER is", ans);
-
         //leng = answer.size();
-
         Log.i("leng", Integer.toString(len));
-
         super.onStart();
-
     }
 
     @Override
     protected void onResume() {
-
-
         //게임 진행
         edittext = (EditText) findViewById(R.id.editText2);
         Button button = (Button) findViewById(R.id.bu1);
@@ -80,12 +60,8 @@ public class numberbaseball extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 input = edittext.getText().toString();
-
                 if(input.length() != len)
-                {
                     Toast.makeText(getApplicationContext(), "wrong input", Toast.LENGTH_LONG).show();
-                }
-
                 else {
                     HashMap<String, String> info = new HashMap<>();
 
@@ -112,69 +88,50 @@ public class numberbaseball extends AppCompatActivity {
 
                     ListView pastlist = findViewById(R.id.pastinfo);
 
-                    ListAdapter adapter = new ExtendedSimpleAdapter(getApplicationContext(), infoList,
+                    Collections.reverse(infoList);
+                    ListAdapter adapter = new ExtendedSimpleAdapter(getApplicationContext(),infoList ,
                             R.layout.infolist, new String[]{"input", "strike", "ball", "out"},
                             new int[]{R.id.tnumber, R.id.tstrike, R.id.tball, R.id.tout});
-
-
                     pastlist.setAdapter(adapter);
-
-
 
                     /*result of trial*/
                     if (str == len) {
-                        /*TODO: SUCCESS Game종료*/
+                        /** SUCCESS - Game종료*/
                         Log.i("basenum", "SUCCESS");
                         showalert(input);
-
                     } else if (str + bal == 0) {
                         Log.i("basenum", "OUT");
                         Toast.makeText(getApplicationContext(), "OUT", Toast.LENGTH_LONG).show();
                     } else {
-                        /*TODO: else->strike값과 ball값 띄우기*/
+                        /** NORMAL - strike값과 ball값 띄우기*/
                         Log.i("basenum", "strike: " + str + " ball: " + bal);
-
                         Toast.makeText(getApplicationContext(), "strike: " + str + " ball: " + bal, Toast.LENGTH_LONG).show();
-
                     }
-
                     edittext.getText().clear();
-
                 }
-
             }
         });
-
-
-
-
+        /**NEW GAME BUTTON Click*/
         Button restart = findViewById(R.id.restart);
         restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 infoList.clear();
-
+                onBackPressed();
+                /*
                 ListView pastlist = findViewById(R.id.pastinfo);
-
                 ListAdapter adapter = new ExtendedSimpleAdapter(getApplicationContext(), infoList,
                         R.layout.infolist, new String[]{"input", "strike", "ball", "out"},
                         new int[]{R.id.tnumber, R.id.tstrike, R.id.tball, R.id.tout});
-
-
                 pastlist.setAdapter(adapter);
-
                 onStart();
-                onResume();
-
+                onResume();*/
             }
         });
-
-
         super.onResume();
     }
 
-
+    /* 임의로 4개의 숫자배열 생성 */
     public void makeAnswer(int len) {
         Set<Integer> set = new HashSet<Integer>();
         set.clear();
@@ -204,8 +161,8 @@ public class numberbaseball extends AppCompatActivity {
         return strike * 10 + ball;
     }
 
+    /**SUCCESS*/
     public void showalert(String string) {
-
         AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
         // 메세지
         alert_confirm.setMessage("4 STRIKES\n" + "정답: " + string);
@@ -213,24 +170,20 @@ public class numberbaseball extends AppCompatActivity {
         alert_confirm.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                onStart();
-                onResume();
+                /**restart*/
+                infoList.clear();
+                onBackPressed();
             }
         });
         // 다이얼로그 생성
         AlertDialog alert = alert_confirm.create();
-
         // 아이콘
-        //alert.setIcon(R.drawable.ic_launcher);
+        //alert.setIcon(R.drawable.icon);
         // 다이얼로그 타이틀
         alert.setTitle("정답입니다.");
         // 다이얼로그 보기
         alert.show();
     }
-
-
-
 }
 
 

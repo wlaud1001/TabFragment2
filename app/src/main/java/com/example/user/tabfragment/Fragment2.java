@@ -33,7 +33,8 @@ public class Fragment2 extends Fragment {
     public Fragment2(){
     }
 
-
+    View v;
+    ViewGroup cont;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
@@ -68,10 +69,11 @@ public class Fragment2 extends Fragment {
     {
         switch (item.getItemId()) {
             case R.id.refresh:
-                Intent intent = new Intent(getActivity(),MainActivity.class);
+                /*Intent intent = new Intent(getActivity(),MainActivity.class);
                 intent.putExtra("reset",true);
+                startActivity(intent);*/
                 Toast.makeText(getActivity().getApplicationContext(), "pushed reset button", Toast.LENGTH_LONG).show();
-                startActivity(intent);
+                loadImage(v,getActivity());
                 //onCreateView(inf,cont,saved);
                 //디버깅용 삭제
 

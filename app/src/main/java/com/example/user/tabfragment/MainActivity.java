@@ -22,13 +22,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-        boolean reset2 = getIntent().getBooleanExtra("reset",false);
-        Log.i("main","reset2 is "+reset2);
-
-
-
         //어댑터를 생성한다. 섹션마다 프래그먼트를 생성하여 리턴해준다.
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
 
@@ -69,11 +62,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .setText(mAppSectionsPagerAdapter.getPageTitle(i))
                             //TabListener 인터페이스를 구현할 액티비티 오브젝트도 지정한다.
                             .setTabListener(this));
-        }
-        if(reset2){
-            Log.i("main","getIntent!");
-            //onTabSelected(actionBar.tab);
-            mViewPager.setCurrentItem(1);
         }
 
     }
@@ -130,10 +118,10 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                     return new Fragment1();
                 case 1:
                     Log.i("main","you clicked case1");
-                    return new Fragment2();
+                    return new Fragment3();
                 case 2:
                     Log.i("main","you clicked case2");
-                    return new Fragment3();
+                    return new Fragment2();
                 default :
                     Log.i("main","DEFAULT: u clicked case"+pos);
                     return new Fragment3();//null;

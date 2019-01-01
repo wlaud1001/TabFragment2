@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BaseNum">
+    tools:context=".numberbaseball">
 
     <EditText
         android:id="@+id/editText2"
@@ -13,7 +13,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="75dp"
         android:ems="10"
-        android:hint="Name"
+        android:hint="Your Answer"
         android:inputType="textPersonName" />
 
     <Button
@@ -29,8 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:text="restart" />
+        android:text="NEW GAME" />
 
     <ListView
         android:id="@+id/pastinfo"
