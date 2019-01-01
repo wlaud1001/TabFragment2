@@ -5,7 +5,7 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/e3"
         android:title="새로고침"
         app:showAsAction="ifRoom" />
 

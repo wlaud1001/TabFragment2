@@ -21,17 +21,19 @@
                 />
 
         <ImageView
-            android:layout_height="fill_parent"
+            android:id="@+id/imageView"
             android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:padding="30dp"
-            android:id="@+id/imageView"/>
+            android:background="#f2fbfd"/>
 
 
         <LinearLayout
             android:id="@+id/lin_bottom"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:layout_gravity="bottom"
+            android:background="#f2fbfd">
 
             <Button
                 android:id="@+id/btn_back"

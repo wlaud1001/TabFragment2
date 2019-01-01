@@ -140,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         public CharSequence getPageTitle(int position) {
             switch(position) {
                 case 0: return "Contacts";
-                case 1: return "Gallery";
-                case 2: return "Game";
+                case 1: return "Game";
+                case 2: return "Gallery";
                 default: return "Something Wrong";
             }
         }

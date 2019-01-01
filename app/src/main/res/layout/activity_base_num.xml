@@ -4,14 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     tools:context=".numberbaseball">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:saveEnabled="false"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:theme="@style/AppTheme"
+        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:titleTextColor="#FFF"
+        tools:color="?attr/colorPrimary"
+        tools:title="Game" />
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="80dp"
         android:ems="10"
         android:hint="Your Answer"
         android:inputType="textPersonName" />
@@ -20,18 +36,11 @@
         android:id="@+id/bu1"
         android:layout_width="109dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="240dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="80dp"
         android:text="Submit" />
 
-    <Button
-        android:id="@+id/restart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:text="NEW GAME" />
+
 
     <ListView
         android:id="@+id/pastinfo"
@@ -39,10 +48,10 @@
         android:layout_height="321dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
+        android:background="#FFF"
         android:layout_marginTop="193dp"/>
 
     <LinearLayout
@@ -61,6 +70,7 @@
             android:id="@+id/textView9"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:background="#ffb6c1"
             android:layout_weight="1"
             android:gravity="center"
             android:text="Number" />
@@ -69,25 +79,37 @@
             android:id="@+id/textView7"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:background="#ffb6c1"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Strikes" />
+            android:text="STRIKE" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:background="#ffb6c1"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Ball" />
+            android:text="BALL" />
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:background="#ffb6c1"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Out" />
+            android:text="OUT" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/restart"
+        android:text="NEW GAME"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="3dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

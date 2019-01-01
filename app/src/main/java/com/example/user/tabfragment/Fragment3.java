@@ -64,14 +64,17 @@ public class Fragment3 extends Fragment {
                 Log.i("checkbox3",""+checkBox3.isChecked());
                 Log.i("selected_position",""+selected_position);
                 if(single.isChecked()){
-                    Log.i("mode","single");
-                }else{Log.i("mode","double");}
-                Intent intent = new Intent(getActivity().getApplicationContext(),numberbaseball.class);
-                intent.putExtra("num#",selected_position);
-                if(selected_position>0)
+                    Intent intent1 = new Intent(getActivity().getApplicationContext(),numberbaseball.class);
+                    intent1.putExtra("num#",selected_position);
+                    if(selected_position>0)
+                        startActivity(intent1);
+                    else
+                        Toast.makeText(getActivity(),"Cannot start TT", Toast.LENGTH_LONG).show();
+                }else{
+                    Intent intent = new Intent(getActivity().getApplicationContext(),DoubleMode.class);
+                    intent.putExtra("first",true);
                     startActivity(intent);
-                else
-                    Toast.makeText(getActivity(),"Cannot start TT", Toast.LENGTH_LONG).show();
+                }
             }
         });
         return view;

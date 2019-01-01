@@ -1,11 +1,11 @@
 package com.example.user.tabfragment;
 
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,26 +20,43 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class numberbaseball extends AppCompatActivity {
+public class player2 extends AppCompatActivity {
     EditText edittext;
     String input;
-    ArrayList<Integer> answer = new ArrayList<Integer>();
+    ArrayList<Integer> answer;
     int len; //intent로 사용자가 입력한 숫자의 길이
-
+    boolean first;
     ArrayList<HashMap<String, String>> infoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_num);
-
         len = getIntent().getIntExtra("num#",3); //checkbox에서 입력한 숫자길이
-        infoList = new ArrayList<>();
+        first = getIntent().getBooleanExtra("first",false);
+        if(first){
+            infoList = new ArrayList<>();
+            answer = new ArrayList<Integer>();
+            answer.clear();
+            //정답 생성
+            makeAnswer(len);
+            String ans = "";
+            for (int i = 0; i < answer.size(); i++) {
+                ans += answer.get(i);
+            }
+            Log.i("ANSWER is", ans);
+            //leng = answer.size();
+            Log.i("leng", Integer.toString(len));
+            super.onStart();
+        }
+
     }
 
-
+   /*
     @Override
     protected void onStart() {
+
+
         answer.clear();
         //정답 생성
         makeAnswer(len);
@@ -52,14 +68,9 @@ public class numberbaseball extends AppCompatActivity {
         //leng = answer.size();
         Log.i("leng", Integer.toString(len));
         super.onStart();
+
     }
-    public boolean isOverlap(String test){
-        Set<Character> testSet = new HashSet<Character>();
-        for(int i=0; i<test.length();i++){
-            testSet.add(test.charAt(i));
-        }
-        return testSet.size()!=len;
-    }
+ */
     @Override
     protected void onResume() {
         //게임 진행
@@ -70,10 +81,7 @@ public class numberbaseball extends AppCompatActivity {
             public void onClick(View v) {
                 input = edittext.getText().toString();
                 if(input.length() != len)
-                    Toast.makeText(getApplicationContext(), "Wrong length!! Please enter "+len+" digits.", Toast.LENGTH_LONG).show();
-                else if(isOverlap(input)){
-                    Toast.makeText(getApplicationContext(), "Digits must not be duplicated.", Toast.LENGTH_LONG).show();
-                }
+                    Toast.makeText(getApplicationContext(), "wrong input", Toast.LENGTH_LONG).show();
                 else {
                     HashMap<String, String> info = new HashMap<>();
 
@@ -85,14 +93,18 @@ public class numberbaseball extends AppCompatActivity {
 
 
                     info.put("input", input);
-                    info.put("ball", Integer.toString(bal));
-                    info.put("strike", Integer.toString(str));
+                    if(str==0){
+                        info.put("strike","ㅡ");
+                    }else
+                        info.put("strike", Integer.toString(str));
+
+                    if(bal==0){
+                        info.put("ball", "ㅡ");
+                    }else
+                        info.put("ball", Integer.toString(bal));
 
                     if (str + bal == 0) {
-                        info.put("strike","ㅡ");
-                        info.put("ball", "ㅡ");
                         info.put("out", "O");
-
                     } else {
                         info.put("out", "X");
                     }
@@ -123,6 +135,11 @@ public class numberbaseball extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "strike: " + str + " ball: " + bal, Toast.LENGTH_LONG).show();
                     }
                     edittext.getText().clear();
+                    Intent intent = new Intent(getApplicationContext(),player2.class);
+                    startActivity(intent);
+                    first =false;
+
+
                 }
             }
         });
@@ -133,6 +150,14 @@ public class numberbaseball extends AppCompatActivity {
             public void onClick(View v) {
                 infoList.clear();
                 onBackPressed();
+                /*
+                ListView pastlist = findViewById(R.id.pastinfo);
+                ListAdapter adapter = new ExtendedSimpleAdapter(getApplicationContext(), infoList,
+                        R.layout.infolist, new String[]{"input", "strike", "ball", "out"},
+                        new int[]{R.id.tnumber, R.id.tstrike, R.id.tball, R.id.tout});
+                pastlist.setAdapter(adapter);
+                onStart();
+                onResume();*/
             }
         });
         super.onResume();
