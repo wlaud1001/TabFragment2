@@ -1,6 +1,5 @@
 package com.example.user.tabfragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,8 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
@@ -24,6 +21,11 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        boolean reset2 = getIntent().getBooleanExtra("reset",false);
+        Log.i("main","reset2 is "+reset2);
 
 
 
@@ -44,8 +46,10 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         //ViewPager에 어댑터를 연결한다.
         mViewPager.setAdapter(mAppSectionsPagerAdapter);
 
+
+
         //사용자가 섹션사이를 스와이프할때 발생하는 이벤트에 대한 리스너를 설정한다.
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override //스와이프로 페이지 이동시 호출됨
             public void onPageSelected(int position) {
                 //액션바의 탭위치를 페이지 위치에 맞춘다.
@@ -53,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             }
         });
 
+
         //각각의 섹션을 위한 탭을 액션바에 추가한다.
         for (int i = 0; i <mAppSectionsPagerAdapter.getCount(); i++) {
+
+
             Log.i("main","adding..."+i);
             actionBar.addTab(
                     actionBar.newTab()
@@ -63,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             //TabListener 인터페이스를 구현할 액티비티 오브젝트도 지정한다.
                             .setTabListener(this));
         }
+        if(reset2){
+            Log.i("main","getIntent!");
+            //onTabSelected(actionBar.tab);
+            mViewPager.setCurrentItem(1);
+        }
+
     }
 
 
@@ -70,7 +83,12 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     @Override //액션바의 탭 선택시 호출됨
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         //액션바에서 선택된 탭에 대응되는 페이지를 뷰페이지에서 현재 보여지는 페이지로 변경한다.
+
+
+        Log.i("main",Integer.toString(tab.getPosition()));
+        //callFragment(tab.getPosition()+1);
         mViewPager.setCurrentItem(tab.getPosition());
+
 
     }
 
@@ -107,10 +125,18 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             Log.i("in main","getitem");
             //프래그먼트의 인스턴스를 생성한다.
             switch(pos) {
-                case 0: return new Fragment1();
-                case 1: return new Fragment2();
-                case 2: return new Fragment3();
-                default : return null;
+                case 0:
+                    Log.i("main","you clicked case0");
+                    return new Fragment1();
+                case 1:
+                    Log.i("main","you clicked case1");
+                    return new Fragment2();
+                case 2:
+                    Log.i("main","you clicked case2");
+                    return new Fragment3();
+                default :
+                    Log.i("main","DEFAULT: u clicked case"+pos);
+                    return new Fragment3();//null;
             }
 
         }
@@ -132,6 +158,37 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             }
         }
     }
+
+    private void callFragment(int frament_no){
+
+        // 프래그먼트 사용을 위해
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        switch (frament_no){
+            case 1:
+                // '프래그먼트1' 호출
+                Fragment1 fragment1 = new Fragment1();
+                transaction.replace(R.id.fragment_container, fragment1);
+                transaction.commit();
+                break;
+
+            case 2:
+                // '프래그먼트2' 호출
+                Fragment2 fragment2 = new Fragment2();
+                transaction.replace(R.id.fragment_container, fragment2);
+                transaction.commit();
+                break;
+
+            case 3:
+                // '프래그먼트2' 호출
+                Fragment3 fragment3 = new Fragment3();
+                transaction.replace(R.id.fragment_container, fragment3);
+                transaction.commit();
+                break;
+        }
+
+    }
+
 
 
 }
