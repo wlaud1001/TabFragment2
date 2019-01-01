@@ -31,10 +31,6 @@
             android:label="@string/title_activity_display_photo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BaseNum"
-            android:label="@string/title_activity_base_num"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".numberbaseball"
             android:label="@string/title_activity_numberbaseball"
             android:theme="@style/AppTheme.NoActionBar"></activity>

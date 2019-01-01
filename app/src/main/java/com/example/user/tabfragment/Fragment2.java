@@ -3,11 +3,15 @@ package com.example.user.tabfragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -20,46 +24,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class Fragment2 extends Fragment {
-
+    private GridView gv;
     public Fragment2(){
     }
 
-    LayoutInflater inf;
-    ViewGroup cont;
-    Bundle saved;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
         Log.i("fragment2","onCreateView");
-
         setHasOptionsMenu(true);
-
-
-        inf = inflater;
-        cont = container;
-        saved = savedInstanceState;
-
+        gv = (GridView) view.findViewById(R.id.ImgGridView);
         if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
-
-            GridView gv = view.findViewById(R.id.ImgGridView);
-            final ImageAdapter ia = new ImageAdapter(getActivity());
-            gv.setAdapter(ia);
-            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    ia.callImageViewer(position);
-                }
-            });
-
+            loadImage(view,getActivity());
         }
-
-
-
         return view;
     }
+
+    public void loadImage(View view,Context con){
+        final ImageAdapter ia = new ImageAdapter(con);
+        gv.setAdapter(ia);
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                ia.callImageViewer(position);
+            }
+        });
+    }
+
 
     /**추가*/
     @Override
@@ -68,34 +64,24 @@ public class Fragment2 extends Fragment {
         super.onCreateOptionsMenu(menu,inflater);
     }
 
-
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        /*
-        View view = inf.inflate(R.layout.fragment_fragment2, cont, false);
-        GridView gv = view.findViewById(R.id.ImgGridView);
-        final ImageAdapter ia = new ImageAdapter(getActivity());
-        gv.setAdapter(ia);
-        */
-
-        //return super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.refresh:
-                onCreateView(inf,cont,saved);
-
-
+                Intent intent = new Intent(getActivity(),MainActivity.class);
+                intent.putExtra("reset",true);
+                Toast.makeText(getActivity().getApplicationContext(), "pushed reset button", Toast.LENGTH_LONG).show();
+                startActivity(intent);
+                //onCreateView(inf,cont,saved);
                 //디버깅용 삭제
-                Toast.makeText(getActivity().getApplicationContext(), "!!!!!", Toast.LENGTH_LONG).show();
 
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 //Toast.makeText(getApplicationContext(), "나머지 버튼 클릭됨", Toast.LENGTH_LONG).show();
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
