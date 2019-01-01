@@ -74,6 +74,7 @@ public class Fragment1 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fragment1, container, false);
 
         contactList = new ArrayList<>();
+
         lv = (ListView) view.findViewById(R.id.ListView);
 
 
