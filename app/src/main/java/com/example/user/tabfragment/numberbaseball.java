@@ -80,10 +80,13 @@ public class numberbaseball extends AppCompatActivity {
                 input = edittext.getText().toString();
                 if(!isDigits(input)){
                     Toast.makeText(getApplicationContext(), "You can only enter numbers.", Toast.LENGTH_LONG).show();
+                    //edittext.getText().clear();
                 } else if(input.length() != len) {
                     Toast.makeText(getApplicationContext(), "Wrong length!! Please enter " + len + " digits.", Toast.LENGTH_LONG).show();
+                    //edittext.getText().clear();
                 } else if(isOverlap(input)){
                     Toast.makeText(getApplicationContext(), "Digits must not be duplicated.", Toast.LENGTH_LONG).show();
+                    //edittext.getText().clear();
                 } else {
                     HashMap<String, String> info = new HashMap<>();
 
@@ -135,10 +138,12 @@ public class numberbaseball extends AppCompatActivity {
                     } else {
                         /** NORMAL - strike값과 ball값 띄우기*/
                         Log.i("basenum", "strike: " + str + " ball: " + bal);
-                        Toast.makeText(getApplicationContext(), "STRIKE : " + str + " BALL 123: " + bal, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "STRIKE : " + str + " BALL : " + bal, Toast.LENGTH_LONG).show();
                     }
-                    edittext.getText().clear();
+                    //edittext.getText().clear();
                 }
+
+                edittext.getText().clear();
             }
         });
         /**NEW GAME BUTTON Click*/

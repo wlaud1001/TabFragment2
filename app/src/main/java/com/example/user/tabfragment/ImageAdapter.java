@@ -70,6 +70,9 @@ public class ImageAdapter extends BaseAdapter {
         bo.inSampleSize = 8;
         Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
         Bitmap resized = resizingBitmap(bmp);
+
+        //imageView.setImageBitmap(bmp);
+
         imageView.setImageBitmap(resized);
 
         return imageView;
