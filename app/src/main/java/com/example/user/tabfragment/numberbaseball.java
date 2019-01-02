@@ -30,6 +30,7 @@ public class numberbaseball extends AppCompatActivity {
     ArrayList<HashMap<String, String>> infoList;
     int mode;
     ArrayList<HashMap<String, String>> infoList1;
+    String ans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class numberbaseball extends AppCompatActivity {
         answer.clear();
         //정답 생성
         makeAnswer();
-        String ans = "";
+        ans = "";
         for (int i = 0; i < answer.size(); i++) {
             ans += answer.get(i);
         }
@@ -77,12 +78,13 @@ public class numberbaseball extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 input = edittext.getText().toString();
-                if(input.length() != len)
-                    Toast.makeText(getApplicationContext(), "Wrong length!! Please enter "+len+" digits.", Toast.LENGTH_LONG).show();
-                else if(isOverlap(input)){
+                if(!isDigits(input)){
+                    Toast.makeText(getApplicationContext(), "You can only enter numbers.", Toast.LENGTH_LONG).show();
+                } else if(input.length() != len) {
+                    Toast.makeText(getApplicationContext(), "Wrong length!! Please enter " + len + " digits.", Toast.LENGTH_LONG).show();
+                } else if(isOverlap(input)){
                     Toast.makeText(getApplicationContext(), "Digits must not be duplicated.", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     HashMap<String, String> info = new HashMap<>();
 
                     Log.i("Trial", input);
@@ -133,7 +135,7 @@ public class numberbaseball extends AppCompatActivity {
                     } else {
                         /** NORMAL - strike값과 ball값 띄우기*/
                         Log.i("basenum", "strike: " + str + " ball: " + bal);
-                        Toast.makeText(getApplicationContext(), "strike: " + str + " ball: " + bal, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "STRIKE : " + str + " BALL 123: " + bal, Toast.LENGTH_LONG).show();
                     }
                     edittext.getText().clear();
                 }
@@ -145,11 +147,22 @@ public class numberbaseball extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 infoList.clear();
+                Toast.makeText(getApplicationContext(), "ANSWER was " + ans, Toast.LENGTH_LONG).show();
                 onBackPressed();
 
             }
         });
         super.onResume();
+    }
+    public boolean isDigits(String test1){
+        int current;
+        for(int i=0; i<test1.length(); i++){
+            current=test1.charAt(i)-48;
+            if(current<0||current>9){
+                return false;
+            }
+        }
+        return true;
     }
 
     /* 임의로 4개의 숫자배열 생성 */

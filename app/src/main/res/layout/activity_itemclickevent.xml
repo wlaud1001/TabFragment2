@@ -31,7 +31,6 @@
         android:layout_width="match_parent"
         android:layout_height="123dp"
         android:layout_marginTop="277dp"
-
         android:orientation="vertical"
         android:weightSum="3">
 
@@ -39,14 +38,14 @@
             android:id="@+id/tname"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:layout_alignStart="@+id/temail"
+            android:textStyle="bold"
+            android:layout_alignStart="@id/temail"
             android:layout_alignParentTop="true"
-
             android:layout_weight="1"
             android:background="#FFF"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="#000000"
+            android:textColor="#404040"
             android:textSize="20sp" />
 
         <TextView

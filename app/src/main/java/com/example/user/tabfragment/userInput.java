@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class userInput extends AppCompatActivity {
 
     @Override
@@ -24,16 +27,25 @@ public class userInput extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String userAnswer = edittext.getText().toString();
-                if (userAnswer.length() == numnum) {
-                    Intent intent = new Intent(getApplicationContext(), numberbaseball.class);
-                    intent.putExtra("userAnswer", userAnswer);
-                    intent.putExtra("user", 1);
-                    intent.putExtra("num#", numnum);
-                    startActivity(intent);
-                } else
-                    Toast.makeText(getApplicationContext(), "Wrong length!! Please enter " + numnum + " digits.", Toast.LENGTH_LONG).show();
+                switch(isValid(userAnswer,numnum)){
+                    case -1: //숫자를 입력해주세요
+                        Toast.makeText(getApplicationContext(), "You can only enter numbers.", Toast.LENGTH_LONG).show();
+                        return;
+                    case 0:
+                        Toast.makeText(getApplicationContext(), "Digits must not be duplicated.", Toast.LENGTH_LONG).show();
+                        return;
+                    case 1:
+                        if (userAnswer.length() == numnum) {
+                            Intent intent = new Intent(getApplicationContext(), numberbaseball.class);
+                            intent.putExtra("userAnswer", userAnswer);
+                            intent.putExtra("user", 1);
+                            intent.putExtra("num#", numnum);
+                            startActivity(intent);
+                        } else
+                            Toast.makeText(getApplicationContext(), "Wrong length!! Please enter " + numnum + " digits.", Toast.LENGTH_LONG).show();
+                    default:
 
-
+                }
             }
         });
         button3.setOnClickListener(new View.OnClickListener() {
@@ -43,4 +55,17 @@ public class userInput extends AppCompatActivity {
             }
         });
     }
+     public int isValid(String str, int leng){
+         Set<Integer> set = new HashSet<Integer>();
+         set.clear();
+         int current;
+        for(int i=0; i<str.length(); i++){
+            current=str.charAt(i)-48;
+            if(current>=0&&current<10){
+                set.add(current);
+            }else return -1; //숫자를 입력하시오
+        }
+        if(set.size()==leng) return 1; //valid!
+        return 0;//중복된 숫자
+     }
 }
